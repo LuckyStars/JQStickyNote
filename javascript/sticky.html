@@ -45,7 +45,7 @@
 			-moz-box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.27), 0 0 1em rgba(0, 0, 0, 0.1) inset; 
 		}
 		.sticky_notes textarea {
-			background-color: #fef282;
+			background-color: #fef282;/* light-yellow default */
 			width: 100%;
 			height: 100%;
 			resize: none;
@@ -54,23 +54,25 @@
 			font-size: 20px;
 		}
         /* colorful! */
-        .sticky-yellow { background-color: #fef282; }
-        .sticky-yellow textarea { background-color: #fef282; }
+        .sticky-yellow { background-color: #FFFFCC; }
+        .sticky-yellow textarea { background-color: #FFFFCC; }
 
-        .sticky-blue { background-color: #84dcf4; }
-        .sticky-blue textarea { background-color: #84dcf4; }
+        .sticky-blue { background-color: #6699CC; }
+        .sticky-blue textarea { background-color: #6699CC; }
 
         .sticky-orange { background-color: #ffa300; }
         .sticky-orange textarea { background-color: #ffa300; }
 
-        .sticky-green { background-color: #c3f900; }
-        .sticky-green textarea { background-color: #c3f900; }
+        .sticky-green { background-color: #66CC66; }
+        .sticky-green textarea { background-color: #66CC66; }
 
+        .sticky-pink { background-color: #FF99CC; }
+        .sticky-pink textarea { background-color: #FF99CC; }
 
-
+        .sticky-red { background-color: #CC0033; }
+        .sticky-red textarea { background-color: #CC0033; }
 
 		#sticky_notes_content_proxy {
-
 			position: absolute;
 			left: -999px;
 			top: -999px;
@@ -84,33 +86,36 @@
 		.sticky_notes textarea:focus {
 			outline: none;
 		}
-		.ui-resizable-ne {
+		.sticky_notes_close {
 			cursor: pointer;
 		}
+
 	</style>
 	<script type="text/javascript">
 		
-
-
 		(function($) { 
 
 			$.fn.StickyNotes = function(options){
 
+				if($.browser.msie){//for debug in ie
+					console = new Object();
+					console.log = alert;
+				}
+
 				var defaults = {
 					draggableIndex:2000,
-					zIndex : 0,
+					zIndex : 100,
 					containment:'body',
-					minHeight: 90,
-					minWidth: 100,
-					beforeClose:function(){return true;},
+					minHeight: 120,
+					minWidth: 130,
+					beforeClose:function(data){console.log(data);return true;},
 					save:function(data){console.log(data);return true},
 					data:{
-							"id":'a',
-							"content":'test',
+							"id":'',
+							"content":'',
 							"top":'100px',
 							"left":'100px'
 						}
-
 				};
 
 
@@ -130,7 +135,18 @@
 					}
 					
 					var saveData = function(){
-						settings.save(getData());
+						if(settings.save(getData())){
+							//every thing goes good
+						}else{
+							//something wrong
+
+						}
+					};
+
+					var doClose = function (){
+						if(settings.beforeClose(getData())){
+							_this.fadeOut();
+						}
 					};
 
 					/**
@@ -148,7 +164,8 @@
 
 					_this.draggable({
 									zIndex: settings.draggableIndex, 
-									containment: settings.containment
+									containment: settings.containment,
+									stop:saveData
 								})
 						.resizable({
 							handles: 'all', 
@@ -161,10 +178,9 @@
 		                removeButton.addClass('ui-icon');
 		                removeButton.addClass('ui-button');
 						removeButton.addClass('ui-icon-closethick');
+						removeButton.addClass('sticky_notes_close');
 						removeButton.click(function(){
-							if(settings.beforeClose()){
-								removeButton.parent().remove();
-							}
+							doClose();
 						});
 						removeButton.hide();
 						_this.mouseover(function(){removeButton.show();});
@@ -172,26 +188,35 @@
 		            }
 		            ////the close end
 
-
+		            /// textarea
 		            if(_this.children('textarea').length<=0){
-		            	$("<textarea>" +settings.data.content +"</textarea>")
+		            	$("<textarea></textarea>")
 		            	.appendTo(_this);
 		            }
 
 		            var _textarea = _this.children('textarea');
+		            if(settings.data.content){
+		            	_textarea.val(settings.data.content);
+		            }
 
 		            _textarea
 		            .css({overflow: 'hidden'})
 		            .keyup(function() {
 						// configure the content proxy to be exactly like this textarea
 						var contentProxy = $("#sticky_notes_content_proxy");
+						
+						if(contentProxy.length<=0){
+							contentProxy = $("<div id='sticky_notes_content_proxy'></div>")
+								.appendTo($('body'));
+						}
+
 						contentProxy
-							.html( _this.val().replace(/\n/g, '<br>') )
-							.width( _this.width() );
+							.html( _textarea.val().replace(/\n/g, '<br>') )
+							.width( _this.width());
 
 						// we can now read the computed height off the proxy
 						var contentHeight = contentProxy.height();
-
+						
 						// auto-expand, leaving room for a blank line at the bottom
 						if ( contentHeight + 40 > _this.height() ) {
 							_this.height(contentHeight + 40);
@@ -202,20 +227,17 @@
 
 					if ( jQuery.browser.msie ) {
 						_textarea.height( _this.height() )
-						// var resizeHandlerId;
+					
 						_this.bind('resize', function() {
 							_textarea.height( _this.height() - 10);
-							/*
-							clearTimeout(resizeHandlerId);
-							resizeHandlerId = setTimeout(function() {
-							}, 50);
-							*/
 						});
 					}
 
 					_textarea.blur(function(){///save after edit content
 						saveData();
 					});
+
+					//////textarea
 
 					//stack
 					var compactifyZIndexes =  function () { 
@@ -249,7 +271,7 @@
 
 		$(function(){
 			$(".sticky").StickyNotes();
-			$("#sticky5").StickyNotes();
+			$("#sticky5").StickyNotes({data:{content:"testststst"}});
 		});
 
 	</script>
@@ -257,10 +279,8 @@
 <body>
 <div id="main">
 
-<div id="sticky_notes_content_proxy"></div>
-
 <!-- Stickies can be defined using ordinary HTML. Just put the "sticky" class on a wrapper around a textarea! -->
-<div id="sticky1" class="sticky sticky-blue sticky_notes" style="top: 80px; left: 340px;"><textarea>Project Idea: Sticky note UI in jquery</textarea></div>
+<div id="sticky1" class="sticky sticky-red sticky_notes" style="top: 80px; left: 340px;"><textarea>Project Idea: Sticky note UI in jquery</textarea></div>
 <div id="sticky2" class="sticky sticky-yellow sticky_notes" style="top: 70px; left: 600px; z-index: 200;"><textarea>Move me...</textarea></div>
 <div id="sticky2" class="sticky sticky-blue sticky_notes" ><textarea>
 Hey, you found a secret!
@@ -282,7 +302,7 @@ Eggs
 Bread
 </textarea></div>
 
-<div id="sticky5" class="sticky sticky-orange sticky_notes" style="top: 95px; left: 80px;">
+<div id="sticky5" class="sticky sticky-pink sticky_notes" style="top: 95px; left: 80px;">
 
 </div>
 
