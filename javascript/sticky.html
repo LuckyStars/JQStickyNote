@@ -38,14 +38,14 @@
 			height: 180px;
 			padding: 1em;
 			cursor: move;
-			background-color: #fef282; /* light-yellow default */
+			background-color: #FFFFCC; /* light-yellow default */
 			/*border: 1px solid #eee272;*/
 			box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.27), 0 0 1em rgba(0, 0, 0, 0.1) inset;
 			-webkit-box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.27), 0 0 1em rgba(0, 0, 0, 0.1) inset;
 			-moz-box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.27), 0 0 1em rgba(0, 0, 0, 0.1) inset; 
 		}
 		.sticky_notes textarea {
-			background-color: #fef282;/* light-yellow default */
+			background-color: #FFFFCC;/* light-yellow default */
 			width: 100%;
 			height: 100%;
 			resize: none;
@@ -114,7 +114,8 @@
 							"id":'',
 							"content":'',
 							"top":'100px',
-							"left":'100px'
+							"left":'100px',
+							"color":''
 						}
 				};
 
@@ -274,11 +275,18 @@
 			$("#sticky5").StickyNotes({data:{content:"testststst"}});
 		});
 
+		function createNew(){
+			console.log('asdasdas');
+			var div = $("<div class='sticky_notes' style='top: 180px; left: 340px;z-inde:999;'></div>");
+			$('body').append(div);
+			$(div).StickyNotes({data:{content:"its a new one"}}).mousedown();
+		}
+
 	</script>
 </head>
 <body>
 <div id="main">
-
+<input type="button" value="create" onclick="createNew();"/> 
 <!-- Stickies can be defined using ordinary HTML. Just put the "sticky" class on a wrapper around a textarea! -->
 <div id="sticky1" class="sticky sticky-red sticky_notes" style="top: 80px; left: 340px;"><textarea>Project Idea: Sticky note UI in jquery</textarea></div>
 <div id="sticky2" class="sticky sticky-yellow sticky_notes" style="top: 70px; left: 600px; z-index: 200;"><textarea>Move me...</textarea></div>
