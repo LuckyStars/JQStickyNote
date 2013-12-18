@@ -57,7 +57,7 @@
 			font-family: HandEN, HandZH;
 			font-size: 20px;
 		}
-		
+
         /* colorful! */
         .sticky-yellow { background-color: #FFFFCC; }
         .sticky-yellow textarea { background-color: #FFFFCC; }
@@ -98,6 +98,8 @@
 	</style>
 	<script type="text/javascript">
 		
+
+
 		(function($) { 
 
 			if($.browser.msie){//for debug in ie
@@ -191,6 +193,7 @@
 					datas.id = _this.attr('sticky_id');
 					datas.top = _this.css('top');
 					datas.left = _this.css('left');
+					datas.color = settings.color;
 					return datas;
 				};
 
@@ -316,6 +319,14 @@
 				compactifyZIndexes();
 				//stack end
 
+				///color
+				if(!settings.color){
+					var key = (new Date().getMilliseconds())%6;
+					var _colors = ['red','blue','orange','pink','yellow','green'];
+					settings.color = 'sticky-' + _colors[key];
+				}
+				_this.addClass(settings.color);
+				//color end
 
 				if(settings.saveOnCreate){
 					saveData();
@@ -324,11 +335,6 @@
 				return $(this);
 				
 			}
-
-			
-
-
-			
 			
 		})(jQuery);
 
@@ -342,7 +348,7 @@
 			var div = $("<div class='sticky_notes' style='z-inde:999;'></div>");
 			$('body').append(div);
 
-			$(div).StickyNotes({id:UUID.generate(),content:"its a new oneasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddssssssssssssssssssssssssssssssss",saveOnCreate:true}).mousedown();
+			$(div).StickyNotes({id:UUID.generate(),content:"its a new oneasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddssssssssssssssssssssssssssssssss",saveOnCreate:true,color:'sticky-yellow'}).mousedown();
 	
 		}
 
