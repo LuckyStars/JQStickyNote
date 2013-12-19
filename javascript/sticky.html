@@ -98,8 +98,6 @@
 	</style>
 	<script type="text/javascript">
 		
-
-
 		(function($) { 
 
 			if($.browser.msie){//for debug in ie
@@ -348,7 +346,7 @@
 			var div = $("<div class='sticky_notes' style='z-inde:999;'></div>");
 			$('body').append(div);
 
-			$(div).StickyNotes({id:UUID.generate(),content:"its a new oneasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddssssssssssssssssssssssssssssssss",saveOnCreate:true,color:'sticky-yellow'}).mousedown();
+			$(div).StickyNotes({id:UUID.generate(),saveOnCreate:true}).mousedown();
 	
 		}
 
